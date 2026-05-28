@@ -1,0 +1,1803 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Robótica · 3.º ESO · SoyTecnoTeacher</title>
+
+<!--
+  FOTOS — Coloca las imágenes en la carpeta ./img/robotica/ con estos nombres.
+  Fuentes libres recomendadas (CC0 / Unsplash / Pexels — buscar y descargar):
+
+    hero-s1.jpg            → "industrial robot arm" (Unsplash)
+    maquina-excavadora.jpg → "excavator construction"
+    automata-semaforo.jpg  → "traffic light"
+    robot-humanoide.jpg    → "humanoid robot ameca" / "boston dynamics"
+    riego-huerta.jpg       → "drip irrigation farm"
+    amr-amazon.jpg         → "warehouse robot amazon"
+    agv-autobus.jpg        → "autonomous bus malaga"
+    brazo-fijo.jpg         → "automotive assembly robot"
+    cobot-laboratorio.jpg  → "collaborative robot laboratory"
+    sector-industria.jpg   → "factory assembly line"
+    sector-agricultura.jpg → "agricultural robot harvest"
+    sector-sanidad.jpg     → "surgery robot da vinci"
+    sector-logistica.jpg   → "delivery robot"
+    sector-hosteleria.jpg  → "restaurant robot"
+    sector-ciudad.jpg      → "smart city sensors"
+    murcia-regadio.jpg     → "agriculture murcia drip irrigation"
+    murcia-quirurgico.jpg  → "da vinci surgical robot"
+    murcia-tiago.jpg       → "pal robotics tiago" o "robotnik amr"
+    hero-s2.jpg            → "ai robot ethics" / silueta robot pensando
+    asimov-retrato.jpg     → "isaac asimov portrait" (dominio público)
+    europa-parlamento.jpg  → "european parliament strasbourg hemiciclo"
+
+  Mientras la imagen no exista, se mostrará un placeholder elegante en su lugar.
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,500;1,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  :root {
+    --bg: #FAFAF7;
+    --paper: #FFFFFF;
+    --paper-soft: #F3F4F0;
+    --ink: #0B1B2B;
+    --stone: #E8E8E3;
+    --muted: #5B6675;
+    --muted-soft: #8a94a3;
+    --brand: #10B981;          /* verde marca — Sesión 1 */
+    --brand-soft: #ECFDF5;
+    --brand-dark: #059669;
+    --coral: #FF6B6B;          /* coral acento — Sesión 2 */
+    --coral-soft: #FFF0F0;
+    --coral-dark: #E14B4B;
+    --amber: #E0B84C;
+    --amber-soft: #FEF7E1;
+    --violet: #8B7AB8;
+    --violet-soft: #F2EFF7;
+    --blue: #4A7A99;
+    --blue-soft: #EAF2F8;
+    --green-secto: #6B9B7C;
+    --red-secto: #A04C4C;
+    --shadow: 0 2px 12px rgba(11,27,43,.06);
+    --shadow-hover: 0 4px 20px rgba(11,27,43,.1);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --radius-pill: 999px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  body {
+    background-image: radial-gradient(circle at 1px 1px, rgba(11,27,43,.045) 1px, transparent 0);
+    background-size: 24px 24px;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Spectral', Georgia, serif;
+    letter-spacing: -.01em;
+    line-height: 1.15;
+    color: var(--ink);
+  }
+
+  .mono {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: .78rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  /* ===== HEADER ===== */
+  .site-header {
+    background: var(--paper);
+    border-bottom: 1px solid var(--stone);
+    padding: 0 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    box-shadow: 0 1px 0 rgba(11,27,43,.03);
+  }
+  .logo {
+    font-family: 'Spectral', serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--ink);
+  }
+  .logo em {
+    color: var(--brand);
+    font-style: italic;
+    margin-right: 4px;
+  }
+  .logo span {
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin-left: 8px;
+  }
+
+  /* ===== SESSION TABS ===== */
+  .session-tabs { display: flex; gap: 8px; }
+  .tab-btn {
+    padding: 7px 18px;
+    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--stone);
+    background: var(--paper);
+    color: var(--muted);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 600;
+    font-size: .85rem;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .tab-btn:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .tab-btn.active-s1 {
+    background: var(--brand);
+    color: #fff;
+    border-color: var(--brand);
+    box-shadow: 0 2px 8px rgba(16,185,129,.25);
+  }
+  .tab-btn.active-s2 {
+    background: var(--coral);
+    color: #fff;
+    border-color: var(--coral);
+    box-shadow: 0 2px 8px rgba(255,107,107,.25);
+  }
+
+  /* ===== PROGRESS BAR ===== */
+  .progress-bar-wrap {
+    height: 3px;
+    background: var(--stone);
+    position: sticky;
+    top: 64px;
+    z-index: 99;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--brand);
+    transition: width .4s ease, background .3s;
+  }
+  body.is-s2 .progress-bar-fill { background: var(--coral); }
+
+  /* ===== SESSION CONTAINER ===== */
+  .session { display: none; }
+  .session.active { display: block; }
+
+  /* ===== HERO ===== */
+  .hero-band {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 1.5rem;
+  }
+  .session-label {
+    display: inline-flex; gap: 8px; align-items: center;
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    color: #fff;
+  }
+  .s1 .session-label { background: var(--brand); }
+  .s2 .session-label { background: var(--coral); }
+
+  .hero-title {
+    font-family: 'Spectral', serif;
+    font-weight: 700;
+    font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+    line-height: 1.05;
+    letter-spacing: -.015em;
+    margin-bottom: 1rem;
+  }
+  .hero-title em {
+    font-style: italic;
+    font-weight: 700;
+  }
+  .s1 .hero-title em { color: var(--brand); }
+  .s2 .hero-title em { color: var(--coral); }
+
+  .hero-sub {
+    color: var(--muted);
+    max-width: 640px;
+    font-size: 1.05rem;
+    line-height: 1.55;
+  }
+
+  .objective-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 1.5rem;
+  }
+  .pill {
+    padding: 5px 14px;
+    border-radius: var(--radius-pill);
+    font-size: .8rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    background: var(--paper);
+    border: 1px solid var(--stone);
+    color: var(--ink);
+  }
+  .s1 .pill { border-color: var(--brand); color: var(--brand-dark); background: var(--brand-soft); }
+  .s2 .pill { border-color: var(--coral); color: var(--coral-dark); background: var(--coral-soft); }
+
+  /* ===== CONTENT WRAP ===== */
+  .content-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+
+  /* ===== BLOCK ===== */
+  .block {
+    margin-bottom: 1.75rem;
+    background: var(--paper);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .block-header {
+    padding: 1.1rem 1.5rem;
+    border-bottom: 1px solid var(--stone);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--paper-soft);
+  }
+  .block-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    background: var(--paper);
+    border: 1px solid var(--stone);
+  }
+  .s1 .block-icon { background: var(--brand-soft); border-color: var(--brand); }
+  .s2 .block-icon { background: var(--coral-soft); border-color: var(--coral); }
+  .block-title {
+    font-family: 'Spectral', serif;
+    font-weight: 600;
+    font-size: 1.2rem;
+    letter-spacing: -.005em;
+  }
+  .block-body {
+    padding: 1.6rem 1.6rem 1.8rem;
+  }
+
+  /* ===== THEORY CARDS ===== */
+  .theory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .theory-card {
+    background: var(--paper);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    padding: 1.1rem 1.2rem;
+    transition: border-color .2s, transform .2s;
+  }
+  .theory-card:hover {
+    border-color: var(--ink);
+    transform: translateY(-2px);
+  }
+  .s1 .theory-card { border-left: 3px solid var(--brand); }
+  .s2 .theory-card { border-left: 3px solid var(--coral); }
+  .tc-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .4rem;
+  }
+  .tc-title {
+    font-family: 'Spectral', serif;
+    font-weight: 600;
+    font-size: 1.15rem;
+    margin-bottom: .35rem;
+  }
+  .tc-body {
+    font-size: .94rem;
+    color: var(--ink);
+    line-height: 1.55;
+  }
+  .tc-body strong { color: var(--brand-dark); font-weight: 600; }
+  .s2 .tc-body strong { color: var(--coral-dark); }
+
+  /* ===== THEORY TEXT ===== */
+  .theory-text {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+    color: var(--ink);
+  }
+  .theory-text strong { color: var(--brand-dark); font-weight: 600; }
+  .s2 .theory-text strong { color: var(--coral-dark); }
+  .theory-text em { font-style: italic; color: var(--muted); }
+
+  /* ===== FOTO ===== */
+  figure.foto {
+    margin: 1.25rem 0;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1px solid var(--stone);
+    background: var(--paper-soft);
+    position: relative;
+  }
+  figure.foto img {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: var(--paper-soft);
+  }
+  /* placeholder visible si la foto no carga */
+  figure.foto .foto-placeholder {
+    display: none;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background:
+      repeating-linear-gradient(45deg, var(--paper-soft) 0 12px, #ebece6 12px 24px);
+    color: var(--muted);
+    padding: 1.5rem;
+    text-align: center;
+  }
+  figure.foto img[data-broken="1"] { display: none; }
+  figure.foto img[data-broken="1"] + .foto-placeholder { display: flex; }
+  .foto-icon { font-size: 2rem; opacity: .6; }
+  .foto-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .78rem;
+    letter-spacing: .04em;
+    line-height: 1.4;
+  }
+  .foto-label small {
+    color: var(--muted-soft);
+    font-size: .7rem;
+    display: block;
+    margin-top: 4px;
+  }
+  figcaption {
+    padding: 10px 14px;
+    font-size: .85rem;
+    color: var(--muted);
+    background: var(--paper);
+    border-top: 1px solid var(--stone);
+    font-style: italic;
+  }
+
+  .foto-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 1.25rem 0;
+  }
+  .foto-grid-3 figure.foto { margin: 0; }
+  @media (max-width: 720px) {
+    .foto-grid-3 { grid-template-columns: 1fr; }
+  }
+
+  /* ===== DIAGRAM (lazo abierto/cerrado) ===== */
+  .diagram-wrap {
+    background: var(--paper-soft);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    padding: 1.4rem;
+    margin: 1rem 0;
+  }
+  .diagram-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    margin-bottom: 1rem;
+  }
+  .diagram-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: .5rem;
+  }
+  .diagram-box {
+    background: var(--paper);
+    border: 1.5px solid var(--stone);
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: .85rem;
+    font-family: 'JetBrains Mono', monospace;
+    text-align: center;
+    min-width: 96px;
+    color: var(--ink);
+  }
+  .diagram-box small { font-family: 'IBM Plex Sans', sans-serif; color: var(--muted); display:block; font-size: .72rem; margin-top: 2px; }
+  .diagram-box.highlight { border-color: var(--brand); color: var(--brand-dark); background: var(--brand-soft); }
+  .diagram-box.highlight2 { border-color: var(--violet); color: var(--violet); background: var(--violet-soft); }
+  .diagram-arrow { color: var(--muted); font-size: 1.2rem; }
+  .diagram-note {
+    font-size: .85rem;
+    color: var(--muted);
+    margin-top: .5rem;
+    font-style: italic;
+  }
+  .lazo-tag {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: var(--radius-pill);
+    font-size: .72rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    letter-spacing: .08em;
+    margin-bottom: .8rem;
+    text-transform: uppercase;
+  }
+  .lazo-abierto { background: var(--amber-soft); color: #8a6a1a; border: 1px solid var(--amber); }
+  .lazo-cerrado { background: var(--brand-soft); color: var(--brand-dark); border: 1px solid var(--brand); }
+
+  /* ===== LAWS ===== */
+  .laws-list {
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+    margin: 1rem 0;
+  }
+  .law-item {
+    background: var(--paper);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    padding: 1.1rem 1.3rem;
+    display: flex;
+    gap: 1.1rem;
+    align-items: flex-start;
+    transition: border-color .2s;
+  }
+  .law-item:hover { border-color: var(--coral); }
+  .law-item.ley-cero {
+    background: var(--coral-soft);
+    border: 1.5px dashed var(--coral);
+  }
+  .law-number {
+    font-family: 'Spectral', serif;
+    font-weight: 700;
+    font-size: 2.2rem;
+    line-height: 1;
+    color: var(--coral);
+    flex-shrink: 0;
+    min-width: 42px;
+  }
+  .law-item.ley-cero .law-number { font-style: italic; }
+  .law-text { font-size: .98rem; line-height: 1.6; }
+  .law-text strong { color: var(--coral-dark); font-weight: 600; }
+  .law-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    margin-bottom: .3rem;
+  }
+
+  /* ===== SECTION DIVIDER ===== */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.8rem 0 1.2rem;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    font-weight: 600;
+  }
+  .section-divider::before, .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--stone);
+  }
+  .s1 .section-divider { color: var(--brand-dark); }
+  .s2 .section-divider { color: var(--coral-dark); }
+
+  /* ===== HIGHLIGHT BOX ===== */
+  .highlight-box {
+    border-radius: var(--radius-sm);
+    padding: 1.2rem 1.4rem;
+    margin: 1rem 0;
+    font-size: .95rem;
+    line-height: 1.65;
+  }
+  .hb-brand { background: var(--brand-soft); border: 1px solid var(--brand); color: var(--ink); }
+  .hb-amber { background: var(--amber-soft); border: 1px solid var(--amber); color: var(--ink); }
+  .hb-coral { background: var(--coral-soft); border: 1px solid var(--coral); color: var(--ink); }
+  .hb-violet { background: var(--violet-soft); border: 1px solid var(--violet); color: var(--ink); }
+  .hb-title {
+    font-family: 'Spectral', serif;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: .4rem;
+  }
+  .hb-brand .hb-title { color: var(--brand-dark); }
+  .hb-amber .hb-title { color: #8a6a1a; }
+  .hb-coral .hb-title { color: var(--coral-dark); }
+  .hb-violet .hb-title { color: #5e4a8a; }
+  .hb-cyan { background: var(--brand-soft); border: 1px solid var(--brand); }
+  .hb-cyan .hb-title { color: var(--brand-dark); font-family: 'Spectral', serif; font-weight: 600; }
+  .hb-purple { background: var(--violet-soft); border: 1px solid var(--violet); }
+  .hb-purple .hb-title { color: #5e4a8a; font-family: 'Spectral', serif; font-weight: 600; }
+
+  /* ===== TABLE ===== */
+  .class-table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+  .class-table th {
+    text-align: left;
+    padding: 10px 12px;
+    background: var(--paper-soft);
+    border-bottom: 2px solid var(--stone);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .class-table td {
+    padding: 11px 12px;
+    border-bottom: 1px solid var(--stone);
+    vertical-align: top;
+  }
+  .class-table tr:last-child td { border-bottom: none; }
+  .class-table tr:hover td { background: var(--brand-soft); }
+  .type-badge {
+    display: inline-block;
+    padding: 3px 11px;
+    border-radius: var(--radius-pill);
+    font-size: .72rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--brand-soft);
+    color: var(--brand-dark);
+    border: 1px solid var(--brand);
+    white-space: nowrap;
+    letter-spacing: .05em;
+  }
+
+  /* ===== QUESTIONS ===== */
+  .question-list { display: flex; flex-direction: column; gap: 1.2rem; }
+  .q-item {
+    background: var(--paper);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    padding: 1.2rem 1.3rem;
+  }
+  .q-item.ethics { border-left: 3px solid var(--amber); background: #FDFCF8; }
+  .q-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    margin-bottom: .5rem;
+    font-weight: 600;
+  }
+  .q-type-tag {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: var(--radius-pill);
+    font-size: .68rem;
+    font-family: 'JetBrains Mono', monospace;
+    margin-left: 8px;
+    font-weight: 600;
+    letter-spacing: .04em;
+  }
+  .q-type-comprension { background: var(--brand-soft); color: var(--brand-dark); border: 1px solid var(--brand); }
+  .q-type-opinion { background: var(--amber-soft); color: #8a6a1a; border: 1px solid var(--amber); }
+  .q-type-reflexion { background: var(--violet-soft); color: #5e4a8a; border: 1px solid var(--violet); }
+  .q-text {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: .75rem;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  textarea.q-answer {
+    width: 100%;
+    background: var(--bg);
+    border: 1.5px solid var(--stone);
+    border-radius: 8px;
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: .94rem;
+    padding: 11px 14px;
+    resize: vertical;
+    min-height: 96px;
+    outline: none;
+    transition: border-color .2s, background .2s;
+    line-height: 1.6;
+  }
+  textarea.q-answer:focus { border-color: var(--brand); background: var(--paper); }
+  .s2 textarea.q-answer:focus { border-color: var(--coral); }
+
+  /* ===== SCALE ===== */
+  .scale-wrap { margin: .5rem 0 .75rem; }
+  .scale-options {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .scale-opt {
+    flex: 1;
+    min-width: 42px;
+    padding: 9px 6px;
+    border-radius: 8px;
+    border: 1.5px solid var(--stone);
+    background: var(--paper);
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .9rem;
+    cursor: pointer;
+    text-align: center;
+    transition: all .15s;
+    font-weight: 600;
+  }
+  .scale-opt:hover { border-color: var(--ink); color: var(--ink); }
+  .scale-opt.selected { background: var(--brand); border-color: var(--brand); color: #fff; }
+  .s2 .scale-opt.selected { background: var(--coral); border-color: var(--coral); color: #fff; }
+
+  /* ===== EU MEASURES ===== */
+  .eu-list { display: flex; flex-direction: column; gap: .6rem; margin: .8rem 0; }
+  .eu-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--paper);
+    border-radius: 8px;
+    padding: .9rem 1.1rem;
+    border: 1px solid var(--stone);
+    font-size: .95rem;
+    line-height: 1.55;
+  }
+  .eu-item:hover { border-color: var(--coral); }
+  .eu-dot { color: var(--coral); font-size: 1.2rem; line-height: 1; margin-top: 2px; flex-shrink: 0; }
+  .eu-item strong { color: var(--coral-dark); font-weight: 600; }
+
+  /* ===== EXPORT BUTTON ===== */
+  .export-section {
+    border-top: 1px solid var(--stone);
+    padding: 2rem 0 0;
+    margin-top: 2rem;
+    text-align: center;
+  }
+  .export-intro {
+    color: var(--muted);
+    font-size: .95rem;
+    margin-bottom: 1.2rem;
+  }
+  .export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 32px;
+    border-radius: var(--radius-pill);
+    border: none;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .export-btn-s1 {
+    background: var(--brand);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(16,185,129,.25);
+  }
+  .export-btn-s1:hover { box-shadow: 0 6px 24px rgba(16,185,129,.4); transform: translateY(-2px); }
+  .export-btn-s2 {
+    background: var(--coral);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(255,107,107,.25);
+  }
+  .export-btn-s2:hover { box-shadow: 0 6px 24px rgba(255,107,107,.4); transform: translateY(-2px); }
+
+  /* ===== NAME FIELD ===== */
+  .name-field-wrap {
+    background: var(--paper);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    padding: 1.1rem 1.3rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+  }
+  .name-field-wrap label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    min-width: 70px;
+    font-weight: 600;
+  }
+  .name-field-wrap input[type=text] {
+    flex: 1;
+    min-width: 160px;
+    background: var(--bg);
+    border: 1.5px solid var(--stone);
+    border-radius: 8px;
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: .95rem;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color .2s, background .2s;
+  }
+  .name-field-wrap input[type=text]:focus { border-color: var(--brand); background: var(--paper); }
+  .s2 .name-field-wrap input[type=text]:focus { border-color: var(--coral); }
+
+  /* ===== GLOSARIO ===== */
+  .glosario-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: .9rem;
+  }
+  .glosario-item {
+    background: var(--paper);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.1rem;
+    border-left: 3px solid var(--coral);
+  }
+  .glosario-term {
+    font-family: 'Spectral', serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--ink);
+    margin-bottom: .25rem;
+  }
+  .glosario-def {
+    font-size: .9rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  /* ===== REVIEW GRID ===== */
+  .review-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: .8rem;
+    margin: 1rem 0;
+  }
+  .review-card {
+    background: var(--paper);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    padding: 1.1rem 1rem;
+    text-align: center;
+  }
+  .rc-icon { font-size: 2rem; margin-bottom: .5rem; }
+  .rc-title {
+    font-family: 'Spectral', serif;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: .25rem;
+  }
+  .rc-sub { font-size: .8rem; color: var(--muted); line-height: 1.45; }
+
+  /* ===== PRINT ===== */
+  @media print {
+    body { background: #fff; }
+    body::before { background-image: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="logo"><em>Robótica</em> <span>3.º ESO · Tecnología</span></div>
+  <div class="session-tabs">
+    <button class="tab-btn active-s1" onclick="showSession(1)" id="tab1">Sesión 1</button>
+    <button class="tab-btn" onclick="showSession(2)" id="tab2">Sesión 2</button>
+  </div>
+</header>
+<div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div>
+
+
+<!-- ===================== SESIÓN 1 ===================== -->
+<div class="session s1 active" id="session1">
+  <div class="hero-band">
+    <span class="session-label">Sesión 1 · Hoy</span>
+    <h1 class="hero-title">Introducción a la <em>Robótica</em></h1>
+    <p class="hero-sub">Vamos a descubrir qué es un robot, cómo funciona, qué tipos existen y dónde los puedes encontrar (incluso aquí, en Murcia). Responde a todas las preguntas en los cuadros de texto.</p>
+    <div class="objective-pills">
+      <span class="pill">Máquina vs. robot</span>
+      <span class="pill">Lazo abierto / cerrado</span>
+      <span class="pill">Clasificación de robots</span>
+      <span class="pill">Robots en tu entorno</span>
+      <span class="pill">Opinión personal</span>
+    </div>
+  </div>
+
+  <div class="content-wrap">
+
+    <!-- Nombre alumno -->
+    <div class="name-field-wrap">
+      <label>Nombre</label>
+      <input type="text" id="s1_nombre" placeholder="Tu nombre completo…">
+      <label>Fecha</label>
+      <input type="text" id="s1_fecha" placeholder="dd/mm/aaaa" value="">
+    </div>
+
+    <!-- Foto hero -->
+    <figure class="foto">
+      <img src="./img/robotica/hero-s1.jpg" alt="Brazo robótico industrial">
+      <div class="foto-placeholder">
+        <span class="foto-icon">📷</span>
+        <span class="foto-label">Foto: brazo robótico industrial<br><small>./img/robotica/hero-s1.jpg</small></span>
+      </div>
+      <figcaption>Brazo robótico de alta precisión en una línea de producción moderna.</figcaption>
+    </figure>
+
+    <!-- BLOQUE 1: MÁQUINA, AUTÓMATA, ROBOT -->
+    <div class="block">
+      <div class="block-header">
+        <div class="block-icon">⚙️</div>
+        <div class="block-title">1. Máquina, Autómata y Robot</div>
+      </div>
+      <div class="block-body">
+        <div class="theory-grid">
+          <div class="theory-card">
+            <div class="tc-label">01 · Máquina</div>
+            <div class="tc-title">Máquina</div>
+            <div class="tc-body">Realiza un trabajo <strong>dirigido por un usuario</strong>. Sin usuario no actúa. Ejemplo: una excavadora.</div>
+          </div>
+          <div class="theory-card">
+            <div class="tc-label">02 · Autómata</div>
+            <div class="tc-title">Autómata</div>
+            <div class="tc-body">Realiza tareas <strong>sencillas y repetitivas</strong> sin supervisión, pero no decide qué hacer. Ejemplo: un semáforo.</div>
+          </div>
+          <div class="theory-card">
+            <div class="tc-label">03 · Robot</div>
+            <div class="tc-title">Robot</div>
+            <div class="tc-body">Puede <strong>decidir qué hacer</strong> en función del entorno. Interpreta información para modificar su conducta.</div>
+          </div>
+        </div>
+
+        <div class="foto-grid-3">
+          <figure class="foto">
+            <img src="./img/robotica/maquina-excavadora.jpg" alt="Excavadora">
+            <div class="foto-placeholder">
+              <span class="foto-icon">📷</span>
+              <span class="foto-label">Excavadora<br><small>maquina-excavadora.jpg</small></span>
+            </div>
+          </figure>
+          <figure class="foto">
+            <img src="./img/robotica/automata-semaforo.jpg" alt="Semáforo">
+            <div class="foto-placeholder">
+              <span class="foto-icon">📷</span>
+              <span class="foto-label">Semáforo<br><small>automata-semaforo.jpg</small></span>
+            </div>
+          </figure>
+          <figure class="foto">
+            <img src="./img/robotica/robot-humanoide.jpg" alt="Robot humanoide">
+            <div class="foto-placeholder">
+              <span class="foto-icon">📷</span>
+              <span class="foto-label">Robot humanoide<br><small>robot-humanoide.jpg</small></span>
+            </div>
+          </figure>
+        </div>
+
+        <div class="section-divider">Sistemas de control</div>
+
+        <div class="diagram-wrap">
+          <div class="diagram-title">Lazo abierto (Autómata) — el sistema no recibe información de lo que ocurre</div>
+          <span class="lazo-tag lazo-abierto">LAZO ABIERTO</span>
+          <div class="diagram-row">
+            <div class="diagram-box highlight">Controlador<small>(reloj)</small></div>
+            <div class="diagram-arrow">→</div>
+            <div class="diagram-box">Actuador<small>(grifo)</small></div>
+            <div class="diagram-arrow">→</div>
+            <div class="diagram-box">Proceso<small>(humedad)</small></div>
+          </div>
+          <p class="diagram-note">Ejemplo: el jardín se riega siempre a la misma hora, aunque esté lloviendo.</p>
+        </div>
+
+        <div class="diagram-wrap">
+          <div class="diagram-title">Lazo cerrado (Robot) — recibe información de la salida y ajusta su comportamiento</div>
+          <span class="lazo-tag lazo-cerrado">LAZO CERRADO</span>
+          <div class="diagram-row">
+            <div class="diagram-box highlight2">Comparador</div>
+            <div class="diagram-arrow">→</div>
+            <div class="diagram-box highlight">Controlador<small>(reloj)</small></div>
+            <div class="diagram-arrow">→</div>
+            <div class="diagram-box">Actuador<small>(grifo)</small></div>
+            <div class="diagram-arrow">→</div>
+            <div class="diagram-box">Proceso<small>(humedad)</small></div>
+          </div>
+          <div class="diagram-row" style="justify-content:flex-end;margin-top:6px;">
+            <div class="diagram-box" style="font-size:.78rem;min-width:80px;">Sensor<small>(humedad)</small></div>
+            <div class="diagram-arrow">↑ realimentación</div>
+          </div>
+          <p class="diagram-note">Ejemplo: el jardín solo se riega si la tierra está seca al llegar la hora programada.</p>
+        </div>
+
+        <figure class="foto">
+          <img src="./img/robotica/riego-huerta.jpg" alt="Sistema de riego automático en huerta">
+          <div class="foto-placeholder">
+            <span class="foto-icon">📷</span>
+            <span class="foto-label">Riego automático en huerta<br><small>riego-huerta.jpg</small></span>
+          </div>
+          <figcaption>Sistema de riego por goteo automatizado — un buen ejemplo de la diferencia entre lazo abierto y cerrado.</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- BLOQUE 2: DEFINICIÓN Y ORIGEN -->
+    <div class="block">
+      <div class="block-header">
+        <div class="block-icon">📖</div>
+        <div class="block-title">2. Definición y origen de la Robótica</div>
+      </div>
+      <div class="block-body">
+        <p class="theory-text">El término <strong>"robótica"</strong> fue acuñado por <strong>Isaac Asimov</strong> para describir la tecnología de los robots. Predijo el auge de la industria robótica, predicción que ya es una realidad.</p>
+        <p class="theory-text">La palabra <strong>"robot"</strong> proviene del término checo <em>robota</em>, que significa <strong>"esclavo"</strong>. Fue usada por primera vez en 1921 en la obra de teatro <em>R.U.R. (Rossum's Universal Robots)</em> del checo Karel Čapek, que planteaba si los robots estaban siendo explotados y qué consecuencias podría traer.</p>
+        <div class="highlight-box hb-brand">
+          <div class="hb-title">Definición actual de robot</div>
+          Una máquina automática programable capaz de <strong>interpretar información del medio físico</strong> para modificar su conducta. Tiene la capacidad de <strong>interactuar con el entorno</strong> y, en función de ello, realizar unas funciones u otras.
+        </div>
+        <p class="theory-text">Los principales objetivos de la robótica son <strong>abaratar los costes de producción</strong> y <strong>realizar tareas tediosas o peligrosas</strong>. Hoy los encontramos en industria, hostelería, medicina, seguridad y muchos más sectores.</p>
+      </div>
+    </div>
+
+    <!-- PREGUNTAS DE COMPRENSIÓN SESIÓN 1 — BLOQUE A -->
+    <div class="block">
+      <div class="block-header">
+        <div class="block-icon">✏️</div>
+        <div class="block-title">Preguntas de comprensión — Parte A</div>
+      </div>
+      <div class="block-body">
+        <div class="question-list">
+          <div class="q-item">
+            <div class="q-num">Pregunta 1 <span class="q-type-tag q-type-comprension">comprensión</span></div>
+            <div class="q-text">¿Qué es capaz de hacer un robot que no puede hacer una máquina?</div>
+            <textarea class="q-answer" id="q1" placeholder="Escribe tu respuesta aquí…" oninput="updateProgress()"></textarea>
+          </div>
+          <div class="q-item">
+            <div class="q-num">Pregunta 2 <span class="q-type-tag q-type-comprension">comprensión</span></div>
+            <div class="q-text">Explica la diferencia entre un sistema de lazo abierto y un sistema de lazo cerrado, mediante un ejemplo <em>distinto al del riego</em>.</div>
+            <textarea class="q-answer" id="q2" placeholder="Escribe tu respuesta aquí…" oninput="updateProgress()"></textarea>
+          </div>
+          <div class="q-item">
+            <div class="q-num">Pregunta 3 <span class="q-type-tag q-type-comprension">comprensión</span></div>
+            <div class="q-text">¿Cómo podemos definir la robótica?</div>
+            <textarea class="q-answer" id="q3" placeholder="Escribe tu respuesta aquí…" oninput="updateProgress()"></textarea>
+          </div>
+          <div class="q-item">
+            <div class="q-num">Pregunta 4 <span class="q-type-tag q-type-comprension">comprensión</span></div>
+            <div class="q-text">¿Cuáles son los objetivos que se pretenden conseguir mediante la robótica?</div>
+            <textarea class="q-answer" id="q4" placeholder="Escribe tu respuesta aquí…" oninput="updateProgress()"></textarea>
+          </div>
+          <div class="q-item">
+            <div class="q-num">Pregunta 5 <span class="q-type-tag q-type-comprension">comprensión</span></div>
+            <div class="q-text">¿De dónde viene la palabra "robot"? ¿Qué significa exactamente?</div>
+            <textarea class="q-answer" id="q5" placeholder="Escribe tu respuesta aquí…" oninput="updateProgress()"></textarea>
+          </div>
+          <div class="q-item">
+            <div class="q-num">Pregunta 6 <span class="q-type-tag q-type-comprension">comprensión</span></div>
+            <div class="q-text">¿Qué es un robot? Da una definición completa con tus propias palabras.</div>
+            <textarea class="q-answer" id="q6" placeholder="Escribe tu respuesta aquí…" oninput="updateProgress()"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOQUE 3: CLASIFICACIÓN -->
+    <div class="block">
+      <div class="block-header">
+        <div class="block-icon">🤖</div>
+        <div class="block-title">3. Clasificación de los Robots</div>
+      </div>
+      <div class="block-body">
+        <p class="theory-text" style="margin-bottom:1rem;">Los robots se pueden clasificar de distintas maneras. Aquí tienes dos criterios principales:</p>
+
+        <div class="section-divider">Según el área de trabajo</div>
+        <table class="class-table">
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Siglas</th>
+              <th>Descripción</th>
+              <th>Ejemplo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="type-badge">AMR</span></td>
+              <td style="color:var(--muted);font-size:.82rem;">Autonomous Mobile Robot</td>
+              <td>Se mueven y toman decisiones gracias a sus sensores y cámaras</td>
+              <td style="color:var(--muted);font-size:.88rem;">Robot de almacén Amazon</td>
+            </tr>
+            <tr>
+              <td><span class="type-badge">AGV</span></td>
+              <td style="color:var(--muted);font-size:.82rem;">Automated Guided Vehicle</td>
+              <td>Se mueven siguiendo pistas o recorridos predefinidos</td>
+              <td style="color:var(--muted);font-size:.88rem;">Autobús sin conductor de Málaga</td>
+            </tr>
+            <tr>
+              <td><span class="type-badge">Fijo</span></td>
+              <td style="color:var(--muted);font-size:.82rem;">—</td>
+              <td>Trabajan dentro de su área de alcance, sin desplazarse</td>
+              <td style="color:var(--muted);font-size:.88rem;">Brazo robótico en fábrica de coches</td>
+            </tr>
+            <tr>
+              <td><span class="type-badge">Humanoide</span></td>
+              <td style="color:var(--muted);font-size:.82rem;">—</td>
+              <td>Tienen forma de personas o animales</td>
+              <td style="color:var(--muted);font-size:.88rem;">Robot Ameca</td>
+            </tr>
+            <tr>
+              <td><span class="type-badge">Cobot</span></td>
+              <td style="color:var(--muted);font-size:.82rem;">Collaborative Robot</td>
+              <td>Diseñados para funcionar junto a los humanos o con ellos</td>
+              <td style="color:var(--muted);font-size:.88rem;">Brazo robot en laboratorio de análisis</td>
+            </tr>
+            <tr>
+              <td><span class="type-badge">Híbrido</span></td>
+              <td style="color:var(--muted);font-size:.82rem;">—</td>
+              <td>Combinación de varios tipos de robots para tareas complejas</td>
+              <td style="color:var(--muted);font-size:.88rem;">Brazo fijo sobre un AMR</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="foto-grid-3" style="margin-top:1.4rem;">
+          <figure class="foto">
+            <img src="./img/robotica/amr-amazon.jpg" alt="Robot AMR de almacén">
+            <div class="foto-placeholder">
+              <span class="foto-icon">📷</span>
+              <span class="foto-label">AMR · Robot de almacén<br><small>amr-amazon.jpg</small></span>
+            </div>
+          </figure>
+          <figure class="foto">
+            <img src="./img/robotica/brazo-fijo.jpg" alt="Brazo robótico fijo en automoción">
+            <div class="foto-placeholder">
+              <span class="foto-icon">📷</span>
+              <span class="foto-label">Brazo fijo · Automoción<br><small>brazo-fijo.jpg</small></span>
+            </div>
+          </figure>
+          <figure class="foto">
+            <img src="./img/robotica/cobot-laboratorio.jpg" alt="Cobot en laboratorio">
+            <div class="foto-placeholder">
+              <span class="foto-icon">📷</span>
+              <span class="foto-label">Cobot · Laboratorio<br><small>cobot-laboratorio.jpg</small></span>
+            </div>
+          </figure>
+        </div>
+
+        <div class="section-divider" style="margin-top:1.5rem;">Según su utilidad</div>
+        <div class="theory-grid">
+          <div class="theory-card"><div class="tc-label">Sector</div><div class="tc-title">🏭 Industria</div><div class="tc-body">Soldadura, montaje, transporte de materiales, seguridad en almacenes.</div></div>
+          <div class="theory-card"><div class="tc-label">Sector</div><div class="tc-title">🌾 Agricultura</div><div class="tc-body">Cosecha de cultivos, evaluación de madurez del fruto, recolección precisa.</div></div>
+          <div class="theory-card"><div class="tc-label">Sector</div><div class="tc-title">🏥 Sanidad</div><div class="tc-body">Reparto de medicamentos, desinfección, apoyo en cirugía y rehabilitación.</div></div>
+          <div class="theory-card"><div class="tc-label">Sector</div><div class="tc-title">📦 Logística</div><div class="tc-body">Procesado de artículos, entregas del último kilómetro, gestión de almacenes.</div></div>
+          <div class="theory-card"><div class="tc-label">Sector</div><div class="tc-title">🏨 Hostelería</div><div class="tc-body">Atención al cliente, gestión de inventario, limpieza, ayuda con equipaje.</div></div>
+          <div class="theory-card"><div class="tc-label">Sector</div><div class="tc-title">🏙️ Ciudad inteligente</div><div class="tc-body">Orientación, patrullas de seguridad, construcción, modelado de edificios.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOQUE 3 BIS: ROBOTS CERCA DE TI (Murcia / España) -->
+    <div class="block">
+      <div class="block-header">
+        <div class="block-icon">📍</div>
+        <div class="block-title">4. Robots cerca de ti — Murcia y España</div>
+      </div>
+      <div class="block-body">
+        <p class="theory-text">No hace falta irse a Japón o Boston para encontrar robots. <strong>En Murcia y en el resto de España</strong> ya hay robots trabajando en hospitales, huertas y fábricas. Estos son algunos ejemplos reales:</p>
+
+        <figure class="foto" style="margin-top:.5rem;">
+          <img src="./img/robotica/murcia-regadio.jpg" alt="Agricultura de precisión en Murcia">
+          <div class="foto-placeholder">
+            <span class="foto-icon">📷</span>
+            <span class="foto-label">Agricultura de precisión · Murcia<br><small>murcia-regadio.jpg</small></span>
+          </div>
+          <figcaption>Huerta de Murcia: sensores y riego automatizado.</figcaption>
+        </figure>
+
+        <div class="theory-grid" style="margin-top:1.2rem;">
+          <div class="theory-card">
+            <div class="tc-label">🌱 Agricultura · Murcia</div>
+            <div class="tc-title">Huerta inteligente</div>
+            <div class="tc-body">El sector agrícola murciano usa <strong>drones y robots autónomos</strong> para detectar plagas, decidir cuándo regar y recolectar fruta. La Universidad Politécnica de Cartagena investiga aquí.</div>
+          </div>
+          <div class="theory-card">
+            <div class="tc-label">🏥 Sanidad · Murcia</div>
+            <div class="tc-title">Cirugía robótica</div>
+            <div class="tc-body">Hospitales como <strong>La Arrixaca</strong> y <strong>Reina Sofía</strong> usan el sistema <em>Da Vinci</em> para operaciones de alta precisión. El cirujano controla los brazos con consola.</div>
+          </div>
+          <div class="theory-card">
+            <div class="tc-label">🏭 Industria · España</div>
+            <div class="tc-title">Robotnik (Valencia)</div>
+            <div class="tc-body">Empresa española que fabrica <strong>AMR industriales</strong> que ya se usan en logística europea. Cobots colaborativos también made in Spain.</div>
+          </div>
+          <div class="theory-card">
+            <div class="tc-label">🤖 Servicio · España</div>
+            <div class="tc-title">PAL Robotics (Barcelona)</div>
+            <div class="tc-body">Crea robots humanoides como <strong>TIAGo</strong> y <strong>REEM</strong>, usados en hospitales, museos y centros comerciales de toda Europa.</div>
+          </div>
+          <div class="theory-card">
+            <div class="tc-label">🚌 Movilidad · Málaga</div>
+            <div class="tc-title">Autobús autónomo</div>
+            <div class="tc-body">Málaga puso en circulación el primer <strong>autobús urbano sin conductor</strong> de España. Es un AGV: sigue una ruta fija.</div>
+          </div>
+          <div class="theory-card">
+            <div class="tc-label">📦 Logística · España</div>
+            <div class="tc-title">Almacenes Amazon</div>
+            <div class="tc-body">Los centros logísticos de El Prat, Illescas o Murcia usan <strong>cientos de AMR</strong> moviéndose por el almacén para preparar pedidos.</div>
+          </div>
+        </div>
+
+        <div class="highlight-box hb-brand" style="margin-top:1.4rem;">
+          <div class="hb-title">¿Lo sabías?</div>
+          España es el <strong>4.º país europeo</strong> en densidad de robots industriales por trabajador. La automoción (SEAT, Renault, Ford-Almussafes) lleva décadas usando brazos robóticos.
+        </div>
+      </div>
+    </div>
+
+    <!-- PREGUNTAS COMPRENSIÓN — BLOQUE B -->
+    <div class="block">
+      <div class="block-header">
+        <div class="block-icon">✏️</div>
+        <div class="block-title">Preguntas de comprensión — Parte B</div>
+      </div>
+      <div class="block-body">
+        <div class="question-list">
+          <div class="q-item">
+            <div class="q-num">Pregunta 7 <span class="q-type-tag q-type-comprension">comprensión</span></div>
+            <div class="q-text">Clasifica los robots según su utilidad. Nombra al menos cuatro sectores y un tipo de robot usado en cada uno.</div>
+            <textarea class="q-answer" id="q7" placeholder="Escribe tu respuesta aquí…" oninput="updateProgress()"></textarea>
+          </div>
+          <div class="q-item">
+            <div class="q-num">Pregunta 8 <span class="q-type-tag q-type-reflexion">reflexión</span></div>
+            <div class="q-text">¿Te has cruzado alguna vez con un robot o un sistema automatizado en tu vida diaria? ¿Dónde? Si no recuerdas ninguno, ¿en qué sector crees que verás uno antes en Murcia: agricultura, sanidad, comercio o transporte? Justifica.</div>
+            <textarea class="q-answer" id="q_murcia" placeholder="Cuéntalo aquí…" oninput="updateProgress()"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REFLEXIÓN ÉTICA SESIÓN 1 -->
+    <div class="block">
+      <div class="block-header">
+        <div class="block-icon">💭</div>
+        <div class="block-title">Reflexión personal — Tu opinión importa</div>
+      </div>
+      <div class="block-body">
+        <div class="highlight-box hb-amber">
+          <div class="hb-title">Aquí no hay respuestas correctas o incorrectas</div>
+          Lo importante es que argumentes tu opinión con razones. Piensa con calma antes de responder.
+        </div>
+        <div class="question-list" style="margin-top:1.2rem;">
+
+          <div class="q-item ethics">
+            <div class="q-num">Pregunta 9 <span class="q-type-tag q-type-opinion">opinión</span></div>
+            <div class="q-text">¿Crees que los robots quitan el trabajo a las personas? ¿Es eso malo, o puede tener algo positivo? Razona tu respuesta.</div>
+            <textarea class="q-answer" id="q8" placeholder="Escribe tu opinión aquí…" oninput="updateProgress()"></textarea>
+          </div>
+
+          <div class="q-item ethics">
+            <div class="q-num">Pregunta 10 <span class="q-type-tag q-type-opinion">opinión</span></div>
+            <div class="q-text">¿Cómo crees que mejorarán los robots de la generación actual al dotarlos de Inteligencia Artificial? ¿Qué posibilidades y qué riesgos ves?</div>
+            <textarea class="q-answer" id="q9" placeholder="Escribe tu opinión aquí…" oninput="updateProgress()"></textarea>
+          </div>
+
+          <div class="q-item ethics">
+            <div class="q-num">Pregunta 11 <span class="q-type-tag q-type-reflexion">reflexión</span></div>
+            <div class="q-text">¿Usarías un robot en casa para que hiciera tus tareas domésticas? ¿Y un robot para ayudarte con los deberes o aprender? ¿Dónde estaría el límite?</div>
+            <textarea class="q-answer" id="q10" placeholder="Escribe tu opinión aquí…" oninput="updateProgress()"></textarea>
+          </div>
+
+          <div class="q-item ethics">
+            <div class="q-num">Pregunta 12 — Escala <span class="q-type-tag q-type-opinion">opinión</span></div>
+            <div class="q-text">¿Hasta qué punto te preocupa el futuro de los robots e IA en la sociedad?<br><small style="color:var(--muted)">(1 = nada, 5 = mucho)</small></div>
+            <div class="scale-wrap">
+              <div class="scale-options" id="scale_s1_q11">
+                <button class="scale-opt" onclick="selectScale('scale_s1_q11','s1_scale1','1')">1</button>
+                <button class="scale-opt" onclick="selectScale('scale_s1_q11','s1_scale1','2')">2</button>
+                <button class="scale-opt" onclick="selectScale('scale_s1_q11','s1_scale1','3')">3</button>
+                <button class="scale-opt" onclick="selectScale('scale_s1_q11','s1_scale1','4')">4</button>
+                <button class="scale-opt" onclick="selectScale('scale_s1_q11','s1_scale1','5')">5</button>
+              </div>
+              <input type="hidden" id="s1_scale1" value="">
+            </div>
+            <textarea class="q-answer" id="q11_text" placeholder="Explica brevemente por qué has marcado esa puntuación…" oninput="updateProgress()" style="min-height:70px;"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPORTAR S1 -->
+    <div class="export-section">
+      <p class="export-intro">¿Has terminado la Sesión 1? Exporta tus respuestas en PDF para entregarlas.</p>
+      <button class="export-btn export-btn-s1" onclick="exportPDF(1)">
+        ⬇ Exportar Sesión 1 a PDF
+      </button>
+    </div>
+
+  </div><!-- /content-wrap -->
+</div><!-- /session1 -->
+
+
+<!-- ===================== SESIÓN 2 ===================== -->
+<div class="session s2" id="session2">
+  <div class="hero-band">
+    <span class="session-label">Sesión 2 · Próxima semana</span>
+    <h1 class="hero-title">Leyes de la Robótica <em>& Reflexión Final</em></h1>
+    <p class="hero-sub">Exploraremos las leyes de Asimov (incluida la Ley Cero), la respuesta de Europa y cerraremos el curso con una mirada hacia atrás a todo lo aprendido.</p>
+    <div class="objective-pills">
+      <span class="pill">Leyes de Asimov</span>
+      <span class="pill">Ley Cero</span>
+      <span class="pill">Regulación EU</span>
+      <span class="pill">Glosario</span>
+      <span class="pill">Balance del curso</span>
+    </div>
+  </div>
+
+  <div class="content-wrap">
+
+    <div class="name-field-wrap">
+      <label>Nombre</label>
+      <input type="text" id="s2_nombre" placeholder="Tu nombre completo…">
+      <label>Fecha</label>
+      <input type="text" id="s2_fecha" placeholder="dd/mm/aaaa" value="">
+    </div>
+
+    <!-- BLOQUE 5: LEYES -->
+    <div class="block">
+      <div class="block-header">
+        <div class="block-icon">⚖️</div>
+        <div class="block-title">5. Las Leyes de la Robótica — Isaac Asimov</div>
+      </div>
+      <div class="block-body">
+
+        <p class="theory-text">Asistimos a un gran avance en la <strong>Inteligencia Artificial</strong>. En un futuro próximo se aplicará la IA a los robots humanoides para que parezcan personas. ¿Se volverán tan inteligentes que se rebelen contra los humanos?</p>
+        <p class="theory-text">Isaac Asimov (1920–1992) publicó en 1942 el relato <em>Círculo vicioso (Runaround)</em> donde aparecieron por primera vez las tres leyes de la robótica:</p>
+
+        <div class="laws-list">
+          <div class="law-item">
+            <div class="law-number">1</div>
+            <div>
+              <div class="law-label">Primera Ley</div>
+              <div class="law-text">Un robot <strong>no hará daño a un ser humano</strong>, ni por inacción permitirá que un ser humano sufra daño.</div>
+            </div>
+          </div>
+          <div class="law-item">
+            <div class="law-number">2</div>
+            <div>
+              <div class="law-label">Segunda Ley</div>
+              <div class="law-text">Un robot debe <strong>cumplir las órdenes</strong> dadas por los seres humanos, a excepción de aquellas que entren en conflicto con la primera ley.</div>
+            </div>
+          </div>
+          <div class="law-item">
+            <div class="law-number">3</div>
+            <div>
+              <div class="law-label">Tercera Ley</div>
+              <div class="law-text">Un robot debe <strong>proteger su propia existencia</strong> en la medida en que esta protección no entre en conflicto con la primera o con la segunda ley.</div>
+            </div>
+          </div>
+
+          <div class="law-item ley-cero">
+            <div class="law-number">0</div>
+            <div>
+              <div class="law-label">Ley Cero · añadida en 1985</div>
+              <div class="law-text">Un robot <strong>no puede dañar a la Humanidad</strong> o, por inacción, permitir que la Humanidad sufra daño.</div>
+              <p style="font-size:.85rem;color:var(--muted);margin-top:.5rem;line-height:1.5;">El propio Asimov la añadió 40 años después en su novela <em>Robots e Imperio</em>. Es una ley superior: <strong>protege a la humanidad entera</strong> antes que a cualquier individuo. Si entra en conflicto con la 1.ª ley (proteger a una persona), gana la Ley Cero.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="highlight-box hb-violet" style="margin-top:1.2rem;">
+          <div class="hb-title">¿Por qué una "Ley Cero"?</div>
+          Imagina un robot que ve a un humano a punto de pulsar un botón que destruiría una ciudad entera. La 1.ª ley le impide hacerle daño a esa persona. La Ley Cero le permite (incluso le obliga) detenerle, aunque sea por la fuerza, porque está protegiendo a millones de humanos.
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOQUE 6: PARLAMENTO EUROPEO -->
+    <div class="block">
+      <div class="block-header">
+        <div class="block-icon">🇪🇺</div>
+        <div class="block-title">6. La Respuesta del Parlamento Europeo</div>
+      </div>
+      <div class="block-body">
+
+        <p class="theory-text">El Parlamento Europeo se inspiró en las leyes de Asimov para empezar a debatir una legislación que regule la IA. El objetivo es <strong>reducir el impacto de las máquinas en nuestras vidas</strong>, especialmente en el trabajo.</p>
+        <div class="eu-list">
+          <div class="eu-item"><div class="eu-dot">◆</div><div><strong>Interruptor de emergencia:</strong> La actividad de las máquinas debe poder ser parada o moderada por los seres humanos en cualquier momento.</div></div>
+          <div class="eu-item"><div class="eu-dot">◆</div><div><strong>Prohibición de dañar a personas:</strong> La robótica siempre debe estar pensada para proteger y ayudar a las personas, nunca para hacerles daño.</div></div>
+          <div class="eu-item"><div class="eu-dot">◆</div><div><strong>Seguro obligatorio para robots grandes:</strong> Los robots más peligrosos deberán estar asegurados, igual que los coches.</div></div>
+          <div class="eu-item"><div class="eu-dot">◆</div><div><strong>Derechos y obligaciones para robots:</strong> Un marco regulatorio que establezca qué pueden y qué no pueden hacer las máquinas.</div></div>
+          <div class="eu-item"><div class="eu-dot">◆</div><div><strong>Los robots deberán pagar impuestos:</strong> Para proteger el empleo humano, las máquinas o sus empresas tributarían a la seguridad social.</div></div>
+        </div>
+        <div class="highlight-box hb-coral" style="margin-top:1rem;">
+          <div class="hb-title">Para reflexionar</div>
+          En los próximos años, la inteligencia artificial estará presente en prácticamente todos los ámbitos de la vida. Las leyes de Asimov, escritas en 1942 (y la Ley Cero en 1985), siguen siendo la base de los debates legislativos actuales en Europa.
+        </div>
+      </div>
+    </div>
+
+    <!-- PREGUNTAS COMPRENSIÓN S2 -->
+    <div class="block">
+      <div class="block-header">
+        <div class="block-icon">✏️</div>
+        <div class="block-title">Preguntas de comprensión — Sesión 2</div>
+      </div>
+      <div class="block-body">
+        <div class="question-list">
+          <div class="q-item">
+            <div class="q-num">Pregunta 1 <span class="q-type-tag q-type-comprension">comprensión</span></div>
+            <div class="q-text">Enumera las tres leyes de la robótica de Asimov con tus propias palabras.</div>
+            <textarea class="q-answer" id="s2_q1" placeholder="Escribe tu respuesta aquí…" oninput="updateProgressS2()"></textarea>
+          </div>
+          <div class="q-item">
+            <div class="q-num">Pregunta 2 <span class="q-type-tag q-type-comprension">comprensión</span></div>
+            <div class="q-text">¿Qué dice la Ley Cero? ¿Por qué se considera "superior" a las otras tres?</div>
+            <textarea class="q-answer" id="s2_q_ley0" placeholder="Explícalo aquí…" oninput="updateProgressS2()"></textarea>
+          </div>
+          <div class="q-item">
+            <div class="q-num">Pregunta 3 <span class="q-type-tag q-type-comprension">comprensión</span></div>
+            <div class="q-text">¿Qué medidas ha tomado o está estudiando tomar el Parlamento Europeo respecto a la robótica y la IA?</div>
+            <textarea class="q-answer" id="s2_q2" placeholder="Escribe tu respuesta aquí…" oninput="updateProgressS2()"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REFLEXIÓN ÉTICA S2 -->
+    <div class="block">
+      <div class="block-header">
+        <div class="block-icon">🧠</div>
+        <div class="block-title">Reflexión ética — Las máquinas y nosotros</div>
+      </div>
+      <div class="block-body">
+        <div class="highlight-box hb-amber">
+          <div class="hb-title">Aquí no hay respuestas correctas o incorrectas</div>
+          Argumenta siempre tu respuesta. Lo importante es que pienses y razones con tus propias ideas.
+        </div>
+        <div class="question-list" style="margin-top:1.2rem;">
+          <div class="q-item ethics">
+            <div class="q-num">Pregunta 4 <span class="q-type-tag q-type-opinion">opinión</span></div>
+            <div class="q-text">¿Crees que es necesario aplicar las leyes de la robótica en los robots actuales? ¿O te parecen ya obsoletas? Justifica tu respuesta.</div>
+            <textarea class="q-answer" id="s2_q3" placeholder="Escribe tu opinión aquí…" oninput="updateProgressS2()"></textarea>
+          </div>
+          <div class="q-item ethics">
+            <div class="q-num">Pregunta 5 <span class="q-type-tag q-type-reflexion">reflexión</span></div>
+            <div class="q-text">¿Crees que los robots deberían tener derechos? ¿Y obligaciones? Si un robot comete un error que daña a alguien, ¿quién es el responsable: el robot, el fabricante, el dueño?</div>
+            <textarea class="q-answer" id="s2_q4" placeholder="Escribe tu opinión aquí…" oninput="updateProgressS2()"></textarea>
+          </div>
+          <div class="q-item ethics">
+            <div class="q-num">Pregunta 6 <span class="q-type-tag q-type-reflexion">reflexión</span></div>
+            <div class="q-text">¿Crees que los robots se volverán en el futuro tan inteligentes que se rebelen contra los humanos? ¿Qué te hace pensar eso?</div>
+            <textarea class="q-answer" id="s2_q5" placeholder="Escribe tu opinión aquí…" oninput="updateProgressS2()"></textarea>
+          </div>
+          <div class="q-item ethics">
+            <div class="q-num">Pregunta 7 — Selección <span class="q-type-tag q-type-opinion">opinión</span></div>
+            <div class="q-text">¿Cuál de las leyes de Asimov te parece más importante (incluida la Ley Cero)?<br><small style="color:var(--muted)">Selecciona una y explica por qué.</small></div>
+            <div class="scale-wrap">
+              <div class="scale-options" id="scale_s2_law">
+                <button class="scale-opt" style="font-size:.78rem;flex:none;padding:9px 14px;" onclick="selectScale('scale_s2_law','s2_law_sel','Ley 0')">Ley 0</button>
+                <button class="scale-opt" style="font-size:.78rem;flex:none;padding:9px 14px;" onclick="selectScale('scale_s2_law','s2_law_sel','1ª Ley')">1ª Ley</button>
+                <button class="scale-opt" style="font-size:.78rem;flex:none;padding:9px 14px;" onclick="selectScale('scale_s2_law','s2_law_sel','2ª Ley')">2ª Ley</button>
+                <button class="scale-opt" style="font-size:.78rem;flex:none;padding:9px 14px;" onclick="selectScale('scale_s2_law','s2_law_sel','3ª Ley')">3ª Ley</button>
+              </div>
+              <input type="hidden" id="s2_law_sel" value="">
+            </div>
+            <textarea class="q-answer" id="s2_q6_text" placeholder="Explica aquí por qué esa ley te parece la más importante…" oninput="updateProgressS2()" style="min-height:80px;"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GLOSARIO -->
+    <div class="block">
+      <div class="block-header">
+        <div class="block-icon">📚</div>
+        <div class="block-title">Mini-glosario — Términos clave</div>
+      </div>
+      <div class="block-body">
+        <p class="theory-text" style="margin-bottom:1rem;">Revisa estos términos antes del examen. Aparecen a lo largo de toda la unidad.</p>
+        <div class="glosario-grid">
+          <div class="glosario-item">
+            <div class="glosario-term">Robot</div>
+            <div class="glosario-def">Máquina programable que interpreta información del entorno y decide su conducta.</div>
+          </div>
+          <div class="glosario-item">
+            <div class="glosario-term">Autómata</div>
+            <div class="glosario-def">Máquina que repite tareas sencillas sin decidir nada (semáforo, lavadora antigua).</div>
+          </div>
+          <div class="glosario-item">
+            <div class="glosario-term">Sensor</div>
+            <div class="glosario-def">Componente que mide algo del entorno (luz, humedad, distancia, temperatura).</div>
+          </div>
+          <div class="glosario-item">
+            <div class="glosario-term">Actuador</div>
+            <div class="glosario-def">Componente que ejecuta una acción física (motor, válvula, luz, altavoz).</div>
+          </div>
+          <div class="glosario-item">
+            <div class="glosario-term">Controlador</div>
+            <div class="glosario-def">El "cerebro" del robot. Recibe datos de los sensores y decide qué hacer.</div>
+          </div>
+          <div class="glosario-item">
+            <div class="glosario-term">Lazo abierto</div>
+            <div class="glosario-def">Sistema sin sensores: hace lo programado pase lo que pase.</div>
+          </div>
+          <div class="glosario-item">
+            <div class="glosario-term">Lazo cerrado</div>
+            <div class="glosario-def">Sistema con sensores: corrige su comportamiento según la información recibida.</div>
+          </div>
+          <div class="glosario-item">
+            <div class="glosario-term">IA · Inteligencia Artificial</div>
+            <div class="glosario-def">Capacidad de un sistema para aprender de datos y tomar decisiones complejas.</div>
+          </div>
+          <div class="glosario-item">
+            <div class="glosario-term">AMR</div>
+            <div class="glosario-def">Autonomous Mobile Robot — se mueve y decide rutas por sí mismo.</div>
+          </div>
+          <div class="glosario-item">
+            <div class="glosario-term">AGV</div>
+            <div class="glosario-def">Automated Guided Vehicle — se mueve siguiendo una ruta fija o pista marcada.</div>
+          </div>
+          <div class="glosario-item">
+            <div class="glosario-term">Cobot</div>
+            <div class="glosario-def">Robot colaborativo, diseñado para trabajar junto a personas con seguridad.</div>
+          </div>
+          <div class="glosario-item">
+            <div class="glosario-term">Humanoide</div>
+            <div class="glosario-def">Robot con forma humana o animal, pensado para interactuar con personas.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BALANCE DEL CURSO -->
+    <div class="block">
+      <div class="block-header">
+        <div class="block-icon">🎓</div>
+        <div class="block-title">Balance del curso — Tecnología 3.º ESO</div>
+      </div>
+      <div class="block-body">
+        <p class="theory-text" style="margin-bottom:1.2rem;">Este ha sido un curso en el que hemos recorrido juntos varios bloques de contenido. Aquí tienes un resumen rápido de lo que hemos trabajado:</p>
+        <div class="review-grid">
+          <div class="review-card">
+            <div class="rc-icon">⚡</div>
+            <div class="rc-title">Electricidad</div>
+            <div class="rc-sub">Circuitos, magnitudes y componentes eléctricos</div>
+          </div>
+          <div class="review-card">
+            <div class="rc-icon">🔌</div>
+            <div class="rc-title">Electrónica</div>
+            <div class="rc-sub">Componentes electrónicos y circuitos</div>
+          </div>
+          <div class="review-card">
+            <div class="rc-icon">📐</div>
+            <div class="rc-title">Vistas</div>
+            <div class="rc-sub">Representación técnica y sistemas de vistas</div>
+          </div>
+          <div class="review-card">
+            <div class="rc-icon">🤖</div>
+            <div class="rc-title">Robótica</div>
+            <div class="rc-sub">Robots, sensores, programación y prácticas</div>
+          </div>
+        </div>
+        <div class="section-divider" style="margin:1.5rem 0;">Preguntas finales del curso</div>
+        <div class="question-list">
+          <div class="q-item ethics">
+            <div class="q-num">Pregunta 8 <span class="q-type-tag q-type-reflexion">reflexión</span></div>
+            <div class="q-text">¿Qué tema del curso te ha parecido más útil o interesante para tu vida diaria? ¿Por qué?</div>
+            <textarea class="q-answer" id="s2_q7" placeholder="Electricidad, electrónica, vistas, robótica… lo que tú consideres." oninput="updateProgressS2()"></textarea>
+          </div>
+          <div class="q-item ethics">
+            <div class="q-num">Pregunta 9 <span class="q-type-tag q-type-reflexion">reflexión</span></div>
+            <div class="q-text">¿Cambiarías algo de cómo hemos aprendido tecnología este año? ¿Más prácticas, más teoría, otras actividades…?</div>
+            <textarea class="q-answer" id="s2_q8" placeholder="Escribe tu opinión sincera aquí…" oninput="updateProgressS2()"></textarea>
+          </div>
+          <div class="q-item ethics">
+            <div class="q-num">Pregunta 10 <span class="q-type-tag q-type-opinion">opinión</span></div>
+            <div class="q-text">¿Crees que las inteligencias artificiales como ChatGPT o Claude deberían usarse en las clases? ¿En qué materias o para qué tareas sería útil? ¿Y en cuáles no?</div>
+            <textarea class="q-answer" id="s2_q9" placeholder="Escribe tu opinión aquí…" oninput="updateProgressS2()"></textarea>
+          </div>
+          <div class="q-item ethics">
+            <div class="q-num">Pregunta 11 <span class="q-type-tag q-type-reflexion">reflexión</span></div>
+            <div class="q-text">Si tuvieras que explicarle a alguien de otra clase qué es un robot y para qué sirve, ¿qué le dirías? ¿Qué es lo más importante que has aprendido de robótica este curso?</div>
+            <textarea class="q-answer" id="s2_q10" placeholder="Escribe aquí tu resumen personal del curso…" oninput="updateProgressS2()"></textarea>
+          </div>
+          <div class="q-item ethics">
+            <div class="q-num">Pregunta 12 — Escalas <span class="q-type-tag q-type-opinion">valoración</span></div>
+            <div class="q-text">Valora los temas del curso del 1 al 5 según cuánto te han gustado:<br><small style="color:var(--muted)">(1 = poco, 5 = mucho)</small></div>
+            <div style="display:flex;flex-direction:column;gap:.8rem;margin-top:.7rem;">
+              <div>
+                <div style="font-size:.88rem;margin-bottom:5px;color:var(--muted);">⚡ Electricidad</div>
+                <div class="scale-options" id="scale_elec">
+                  <button class="scale-opt" onclick="selectScale('scale_elec','val_elec','1')">1</button>
+                  <button class="scale-opt" onclick="selectScale('scale_elec','val_elec','2')">2</button>
+                  <button class="scale-opt" onclick="selectScale('scale_elec','val_elec','3')">3</button>
+                  <button class="scale-opt" onclick="selectScale('scale_elec','val_elec','4')">4</button>
+                  <button class="scale-opt" onclick="selectScale('scale_elec','val_elec','5')">5</button>
+                </div>
+                <input type="hidden" id="val_elec" value="">
+              </div>
+              <div>
+                <div style="font-size:.88rem;margin-bottom:5px;color:var(--muted);">🔌 Electrónica</div>
+                <div class="scale-options" id="scale_elec2">
+                  <button class="scale-opt" onclick="selectScale('scale_elec2','val_elec2','1')">1</button>
+                  <button class="scale-opt" onclick="selectScale('scale_elec2','val_elec2','2')">2</button>
+                  <button class="scale-opt" onclick="selectScale('scale_elec2','val_elec2','3')">3</button>
+                  <button class="scale-opt" onclick="selectScale('scale_elec2','val_elec2','4')">4</button>
+                  <button class="scale-opt" onclick="selectScale('scale_elec2','val_elec2','5')">5</button>
+                </div>
+                <input type="hidden" id="val_elec2" value="">
+              </div>
+              <div>
+                <div style="font-size:.88rem;margin-bottom:5px;color:var(--muted);">📐 Vistas</div>
+                <div class="scale-options" id="scale_vistas">
+                  <button class="scale-opt" onclick="selectScale('scale_vistas','val_vistas','1')">1</button>
+                  <button class="scale-opt" onclick="selectScale('scale_vistas','val_vistas','2')">2</button>
+                  <button class="scale-opt" onclick="selectScale('scale_vistas','val_vistas','3')">3</button>
+                  <button class="scale-opt" onclick="selectScale('scale_vistas','val_vistas','4')">4</button>
+                  <button class="scale-opt" onclick="selectScale('scale_vistas','val_vistas','5')">5</button>
+                </div>
+                <input type="hidden" id="val_vistas" value="">
+              </div>
+              <div>
+                <div style="font-size:.88rem;margin-bottom:5px;color:var(--muted);">🤖 Robótica</div>
+                <div class="scale-options" id="scale_robot">
+                  <button class="scale-opt" onclick="selectScale('scale_robot','val_robot','1')">1</button>
+                  <button class="scale-opt" onclick="selectScale('scale_robot','val_robot','2')">2</button>
+                  <button class="scale-opt" onclick="selectScale('scale_robot','val_robot','3')">3</button>
+                  <button class="scale-opt" onclick="selectScale('scale_robot','val_robot','4')">4</button>
+                  <button class="scale-opt" onclick="selectScale('scale_robot','val_robot','5')">5</button>
+                </div>
+                <input type="hidden" id="val_robot" value="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPORTAR S2 -->
+    <div class="export-section">
+      <p class="export-intro">¿Has terminado la Sesión 2? Exporta tus respuestas en PDF para entregarlas.</p>
+      <button class="export-btn export-btn-s2" onclick="exportPDF(2)">
+        ⬇ Exportar Sesión 2 a PDF
+      </button>
+    </div>
+
+  </div>
+</div><!-- /session2 -->
+
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+  // Marca placeholder cuando la imagen no carga
+  document.querySelectorAll('figure.foto img').forEach(img => {
+    img.addEventListener('error', () => img.setAttribute('data-broken','1'));
+    if (img.complete && img.naturalWidth === 0) img.setAttribute('data-broken','1');
+  });
+
+  function showSession(n) {
+    document.getElementById('session1').classList.toggle('active', n===1);
+    document.getElementById('session2').classList.toggle('active', n===2);
+    document.getElementById('tab1').className = 'tab-btn' + (n===1 ? ' active-s1' : '');
+    document.getElementById('tab2').className = 'tab-btn' + (n===2 ? ' active-s2' : '');
+    document.body.classList.toggle('is-s2', n===2);
+    if(n===1) updateProgress(); else updateProgressS2();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function selectScale(groupId, inputId, value) {
+    const btns = document.getElementById(groupId).querySelectorAll('.scale-opt');
+    btns.forEach(b => b.classList.remove('selected'));
+    event.target.classList.add('selected');
+    document.getElementById(inputId).value = value;
+    updateProgress(); updateProgressS2();
+  }
+
+  function updateProgress() {
+    const ids = ['q1','q2','q3','q4','q5','q6','q7','q_murcia','q8','q9','q10','q11_text','s1_scale1'];
+    const filled = ids.filter(id => {
+      const el = document.getElementById(id);
+      return el && el.value && el.value.trim().length > 0;
+    }).length;
+    document.getElementById('progressBar').style.width = Math.round((filled/ids.length)*100)+'%';
+  }
+
+  function updateProgressS2() {
+    const ids = ['s2_q1','s2_q_ley0','s2_q2','s2_q3','s2_q4','s2_q5','s2_q6_text','s2_q7','s2_q8','s2_q9','s2_q10','s2_law_sel'];
+    const filled = ids.filter(id => {
+      const el = document.getElementById(id);
+      return el && el.value && el.value.trim().length > 0;
+    }).length;
+    document.getElementById('progressBar').style.width = Math.round((filled/ids.length)*100)+'%';
+  }
+
+  // ---- PDF EXPORT ----
+  function exportPDF(session) {
+    const nombre = session===1
+      ? (document.getElementById('s1_nombre').value || 'Sin nombre')
+      : (document.getElementById('s2_nombre').value || 'Sin nombre');
+    const fecha = session===1
+      ? (document.getElementById('s1_fecha').value || '')
+      : (document.getElementById('s2_fecha').value || '');
+
+    const ACCENT = session===1 ? '#10B981' : '#FF6B6B';
+
+    let rows = '';
+
+    if(session===1) {
+      const preguntas = [
+        {n:'Pregunta 1', tipo:'Comprensión', texto:'¿Qué es capaz de hacer un robot que no puede hacer una máquina?', id:'q1'},
+        {n:'Pregunta 2', tipo:'Comprensión', texto:'Diferencia entre lazo abierto y cerrado (ejemplo distinto al riego).', id:'q2'},
+        {n:'Pregunta 3', tipo:'Comprensión', texto:'¿Cómo podemos definir la robótica?', id:'q3'},
+        {n:'Pregunta 4', tipo:'Comprensión', texto:'¿Cuáles son los objetivos de la robótica?', id:'q4'},
+        {n:'Pregunta 5', tipo:'Comprensión', texto:'¿De dónde viene la palabra "robot"? ¿Qué significa?', id:'q5'},
+        {n:'Pregunta 6', tipo:'Comprensión', texto:'¿Qué es un robot? Da una definición completa con tus palabras.', id:'q6'},
+        {n:'Pregunta 7', tipo:'Comprensión', texto:'Clasifica los robots según su utilidad (4 sectores + tipos).', id:'q7'},
+        {n:'Pregunta 8', tipo:'Reflexión', texto:'¿Te has cruzado con algún robot? Si no, ¿dónde aparecerá primero en Murcia?', id:'q_murcia'},
+        {n:'Pregunta 9', tipo:'Opinión', texto:'¿Los robots quitan trabajo a las personas? ¿Es malo o positivo?', id:'q8'},
+        {n:'Pregunta 10', tipo:'Opinión', texto:'¿Cómo mejorarán los robots con IA? Posibilidades y riesgos.', id:'q9'},
+        {n:'Pregunta 11', tipo:'Reflexión', texto:'¿Usarías un robot en casa o para estudiar? ¿Dónde está el límite?', id:'q10'},
+        {n:'Pregunta 12', tipo:'Opinión / Escala', texto:'¿Hasta qué punto te preocupa el futuro de robots e IA? (1–5)', id:'q11_text', extra: document.getElementById('s1_scale1').value},
+      ];
+      preguntas.forEach(p => {
+        const respuesta = (document.getElementById(p.id) ? document.getElementById(p.id).value : '') || '(sin respuesta)';
+        const extra = p.extra ? `<div style="font-size:10px;color:#555;margin-bottom:4px;">Puntuación seleccionada: <strong>${p.extra}</strong></div>` : '';
+        rows += `
+          <div style="margin-bottom:18px;page-break-inside:avoid;">
+            <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:5px;">
+              <span style="font-weight:700;font-size:11px;color:#333;">${p.n}</span>
+              <span style="background:${tagBg(p.tipo)};color:${tagFg(p.tipo)};border-radius:99px;padding:1px 9px;font-size:9px;font-weight:600;">${p.tipo}</span>
+            </div>
+            <div style="font-size:11px;color:#444;margin-bottom:5px;line-height:1.5;">${p.texto}</div>
+            ${extra}
+            <div style="background:#f8f9fa;border:1px solid #e2e8f0;border-radius:6px;padding:10px 12px;font-size:11px;color:#111;line-height:1.65;min-height:36px;white-space:pre-wrap;">${escapeHtml(respuesta)}</div>
+          </div>`;
+      });
+    } else {
+      const preguntas2 = [
+        {n:'Pregunta 1', tipo:'Comprensión', texto:'Enumera las tres leyes de Asimov con tus propias palabras.', id:'s2_q1'},
+        {n:'Pregunta 2', tipo:'Comprensión', texto:'¿Qué dice la Ley Cero? ¿Por qué se considera superior?', id:'s2_q_ley0'},
+        {n:'Pregunta 3', tipo:'Comprensión', texto:'¿Qué medidas estudia el Parlamento Europeo sobre robótica e IA?', id:'s2_q2'},
+        {n:'Pregunta 4', tipo:'Opinión', texto:'¿Son necesarias las leyes de Asimov hoy o son obsoletas? Justifica.', id:'s2_q3'},
+        {n:'Pregunta 5', tipo:'Reflexión', texto:'¿Deberían los robots tener derechos? ¿Quién responde si dañan?', id:'s2_q4'},
+        {n:'Pregunta 6', tipo:'Reflexión', texto:'¿Se rebelarán los robots en el futuro? ¿Qué te hace pensar eso?', id:'s2_q5'},
+        {n:'Pregunta 7', tipo:'Opinión / Selección', texto:'¿Cuál de las leyes de Asimov te parece más importante? Explica.', id:'s2_q6_text', extra: document.getElementById('s2_law_sel').value},
+        {n:'Pregunta 8', tipo:'Reflexión', texto:'¿Qué tema del curso te ha parecido más útil para tu vida diaria?', id:'s2_q7'},
+        {n:'Pregunta 9', tipo:'Reflexión', texto:'¿Cambiarías algo de cómo hemos aprendido tecnología este año?', id:'s2_q8'},
+        {n:'Pregunta 10', tipo:'Opinión', texto:'¿Deberían usarse IAs como ChatGPT/Claude en las clases? ¿Dónde sí, dónde no?', id:'s2_q9'},
+        {n:'Pregunta 11', tipo:'Reflexión', texto:'¿Qué le dirías a alguien sobre qué es un robot y qué has aprendido?', id:'s2_q10'},
+      ];
+      const valElec = document.getElementById('val_elec').value || '—';
+      const valElec2 = document.getElementById('val_elec2').value || '—';
+      const valVistas = document.getElementById('val_vistas').value || '—';
+      const valRobot = document.getElementById('val_robot').value || '—';
+
+      preguntas2.forEach(p => {
+        const respuesta = (document.getElementById(p.id) ? document.getElementById(p.id).value : '') || '(sin respuesta)';
+        const extra = p.extra ? `<div style="font-size:10px;color:#555;margin-bottom:4px;">Selección: <strong>${p.extra}</strong></div>` : '';
+        rows += `
+          <div style="margin-bottom:18px;page-break-inside:avoid;">
+            <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:5px;">
+              <span style="font-weight:700;font-size:11px;color:#333;">${p.n}</span>
+              <span style="background:${tagBg(p.tipo)};color:${tagFg(p.tipo)};border-radius:99px;padding:1px 9px;font-size:9px;font-weight:600;">${p.tipo}</span>
+            </div>
+            <div style="font-size:11px;color:#444;margin-bottom:5px;line-height:1.5;">${p.texto}</div>
+            ${extra}
+            <div style="background:#f8f9fa;border:1px solid #e2e8f0;border-radius:6px;padding:10px 12px;font-size:11px;color:#111;line-height:1.65;min-height:36px;white-space:pre-wrap;">${escapeHtml(respuesta)}</div>
+          </div>`;
+      });
+      rows += `
+        <div style="margin-bottom:18px;page-break-inside:avoid;">
+          <div style="font-weight:700;font-size:11px;color:#333;margin-bottom:6px;">Pregunta 12 — Valoración de los temas del curso</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <div style="background:#f8f9fa;border:1px solid #e2e8f0;border-radius:6px;padding:8px 14px;font-size:11px;">⚡ Electricidad: <strong>${valElec}/5</strong></div>
+            <div style="background:#f8f9fa;border:1px solid #e2e8f0;border-radius:6px;padding:8px 14px;font-size:11px;">🔌 Electrónica: <strong>${valElec2}/5</strong></div>
+            <div style="background:#f8f9fa;border:1px solid #e2e8f0;border-radius:6px;padding:8px 14px;font-size:11px;">📐 Vistas: <strong>${valVistas}/5</strong></div>
+            <div style="background:#f8f9fa;border:1px solid #e2e8f0;border-radius:6px;padding:8px 14px;font-size:11px;">🤖 Robótica: <strong>${valRobot}/5</strong></div>
+          </div>
+        </div>`;
+    }
+
+    const htmlContent = `
+      <div style="font-family:Georgia,'Spectral',serif;max-width:680px;margin:0 auto;padding:32px 24px;color:#111;">
+        <div style="border-bottom:2px solid ${ACCENT};padding-bottom:16px;margin-bottom:24px;">
+          <div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:${ACCENT};margin-bottom:4px;font-family:monospace;">TECNOLOGÍA · 3.º ESO · ROBÓTICA · SoyTecnoTeacher</div>
+          <h1 style="font-size:22px;margin:0 0 6px;font-weight:bold;">Robótica — Sesión ${session}</h1>
+          <div style="display:flex;gap:24px;font-size:11px;color:#555;">
+            <div>Alumno/a: <strong>${escapeHtml(nombre)}</strong></div>
+            ${fecha ? `<div>Fecha: <strong>${escapeHtml(fecha)}</strong></div>` : ''}
+          </div>
+        </div>
+        ${rows}
+        <div style="margin-top:32px;border-top:1px solid #e2e8f0;padding-top:12px;font-size:9px;color:#999;text-align:center;">
+          soytecnoteacher.com · Tecnología 3.º ESO · Actividad generada digitalmente
+        </div>
+      </div>`;
+
+    const container = document.createElement('div');
+    container.innerHTML = htmlContent;
+    document.body.appendChild(container);
+
+    const filename = `Robotica_Sesion${session}_${nombre.replace(/\s+/g,'_')}.pdf`;
+    html2pdf().set({
+      margin: [10, 10, 10, 10],
+      filename,
+      image: { type: 'jpeg', quality: 0.97 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['avoid-all', 'css'] }
+    }).from(container).save().then(() => {
+      document.body.removeChild(container);
+    });
+  }
+
+  function tagBg(tipo) {
+    if (tipo === 'Comprensión') return '#ECFDF5';
+    if (tipo.includes('Escala') || tipo.includes('Selección') || tipo === 'Opinión') return '#FEF7E1';
+    return '#F2EFF7';
+  }
+  function tagFg(tipo) {
+    if (tipo === 'Comprensión') return '#059669';
+    if (tipo.includes('Escala') || tipo.includes('Selección') || tipo === 'Opinión') return '#8a6a1a';
+    return '#5e4a8a';
+  }
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;');
+  }
+
+  // INIT DATE
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2,'0');
+  const mm = String(today.getMonth()+1).padStart(2,'0');
+  const yyyy = today.getFullYear();
+  document.getElementById('s1_fecha').value = `${dd}/${mm}/${yyyy}`;
+  document.getElementById('s2_fecha').value = `${dd}/${mm}/${yyyy}`;
+</script>
+</body>
+</html>
