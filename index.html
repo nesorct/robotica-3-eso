@@ -1827,14 +1827,11 @@
       </div>
     </div>
   </div>
-  <script>
-    function lanzarImprimir() { setTimeout(() => window.print(), 500); }
-    if (document.readyState === 'complete') {
-      lanzarImprimir();
-    } else {
-      window.addEventListener('load', lanzarImprimir);
-    }
-  </script>
+  <scr`+`ipt>
+    function lanzarImprimir() { setTimeout(function(){ window.print(); }, 500); }
+    if (document.readyState === 'complete') { lanzarImprimir(); }
+    else { window.addEventListener('load', lanzarImprimir); }
+  <\/scr`+`ipt>
 </body>
 </html>`;
 
