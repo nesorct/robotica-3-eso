@@ -1757,19 +1757,32 @@
       </div>`;
 
     const container = document.createElement('div');
+    container.style.cssText = 'position:fixed;left:-9999px;top:0;width:210mm;background:#ffffff;padding:0;margin:0;';
     container.innerHTML = htmlContent;
     document.body.appendChild(container);
 
     const filename = `Robotica_Sesion${session}_${nombre.replace(/\s+/g,'_')}.pdf`;
-    html2pdf().set({
+    const opt = {
       margin: [10, 10, 10, 10],
       filename,
       image: { type: 'jpeg', quality: 0.97 },
-      html2canvas: { scale: 2, useCORS: true },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+        windowWidth: 794
+      },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
       pagebreak: { mode: ['avoid-all', 'css'] }
-    }).from(container).save().then(() => {
+    };
+
+    html2pdf().from(container).set(opt).save().then(() => {
       document.body.removeChild(container);
+    }).catch(err => {
+      console.error('PDF export error:', err);
+      alert('Hubo un error al generar el PDF. Mira la consola del navegador (F12).');
+      if (container.parentNode) document.body.removeChild(container);
     });
   }
 
