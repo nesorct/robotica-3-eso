@@ -1828,20 +1828,28 @@
     </div>
   </div>
   <script>
-    // Lanza el diálogo de imprimir automáticamente al cargar
-    window.addEventListener('load', () => setTimeout(() => window.print(), 350));
+    function lanzarImprimir() { setTimeout(() => window.print(), 500); }
+    if (document.readyState === 'complete') {
+      lanzarImprimir();
+    } else {
+      window.addEventListener('load', lanzarImprimir);
+    }
   </script>
 </body>
 </html>`;
 
-    const win = window.open('', '_blank');
+    // Blob URL: el navegador carga el documento como página normal,
+    // el evento 'load' se dispara correctamente y el print automático funciona.
+    const blob = new Blob([printDoc], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const win = window.open(url, '_blank');
     if (!win) {
+      URL.revokeObjectURL(url);
       alert('Tu navegador ha bloqueado la ventana emergente. Permite ventanas emergentes para este sitio y vuelve a intentarlo.');
       return;
     }
-    win.document.open();
-    win.document.write(printDoc);
-    win.document.close();
+    // Liberamos el blob un poco más tarde, cuando ya se ha cargado
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
   }
 
   function tagBg(tipo) {
